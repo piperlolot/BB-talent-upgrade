@@ -1,7 +1,12 @@
 ::mods_registerMod("mod_temple", 1, "Talent booster");
 
-::mods_hookNewObject("items/misc/ghoul_brain_item", function ( sub )
+::mods_hookClass("items/misc/ghoul_brain_item", function ( sub )
 {
+  local baseSub = sub;
+  
+  while(!("create" in sub))
+    sub = sub[sub.SuperName];
+
   sub.create = function()
   {
 		this.m.ID = "misc.ghoul_brain";
@@ -16,6 +21,11 @@
 		this.m.Value = 200;
   };
 
+  sub = baseSub;
+  while(!("onUse" in sub))
+    sub = sub[sub.SuperName];
+
+  
   sub.onUse = function(_actor, _item = null )
   {
     if(_actor.getLevel() - _actor.getLevelUps() > 1)
